@@ -1,3 +1,6 @@
+from mastml.models import SklearnModel
+from mastml.data_splitters import NoSplit, SklearnDataSplitter, LeaveCloseCompositionsOut, LeaveOutPercent, \
+    Bootstrap, JustEachGroup
 import unittest
 import pandas as pd
 import numpy as np
@@ -7,9 +10,6 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../../../'))
 
-from mastml.data_splitters import NoSplit, SklearnDataSplitter, LeaveCloseCompositionsOut, LeaveOutPercent, \
-    Bootstrap, JustEachGroup
-from mastml.models import SklearnModel
 
 class TestSplitters(unittest.TestCase):
 
@@ -38,7 +38,7 @@ class TestSplitters(unittest.TestCase):
     def test_close_comps(self):
         # Make entries at a 10% spacing
         composition_df = pd.DataFrame({'composition': ['Al{}Cu{}'.format(i, 10-i) for i in range(11)]})
-        X = pd.DataFrame(np.random.uniform(low=0.0, high=100, size=(11,10)))
+        X = pd.DataFrame(np.random.uniform(low=0.0, high=100, size=(11, 10)))
         y = pd.Series(np.random.uniform(low=0.0, high=100, size=(11,)))
 
         # Generate test splits with a 5% distance cutoff
@@ -74,9 +74,9 @@ class TestSplitters(unittest.TestCase):
         return
 
     def test_justeachgroup(self):
-        X = pd.DataFrame(np.random.uniform(low=0.0, high=100, size=(5,10)))
+        X = pd.DataFrame(np.random.uniform(low=0.0, high=100, size=(5, 10)))
         y = pd.Series(np.random.uniform(low=0.0, high=100, size=(5,)))
-        groups = pd.DataFrame.from_dict({'groups':[0, 1, 1, 0, 1]})
+        groups = pd.DataFrame.from_dict({'groups': [0, 1, 1, 0, 1]})
         X = pd.concat([X, groups], axis=1)
         splitter = JustEachGroup()
         model = SklearnModel(model='LinearRegression')
@@ -86,5 +86,9 @@ class TestSplitters(unittest.TestCase):
             shutil.rmtree(d)
         return
 
-if __name__=='__main__':
+    def test_leaveoutrwincv(self):
+        return
+
+
+if __name__ == '__main__':
     unittest.main()
