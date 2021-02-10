@@ -279,10 +279,10 @@ class BaseSplitter(ms.BaseCrossValidator):
         data = list()
         for d in dirs:
             try:
-                data.append(np.array(pd.read_excel(os.path.join(savepath, os.path.join(d, filename)+'.xlsx'))[filename]))
-            except:
                 data.append(np.array(pd.read_excel(os.path.join(savepath, os.path.join(d, filename)+'.xlsx'),
                                                    engine='openpyxl')[filename]))
+            except:
+                data.append(np.array(pd.read_excel(os.path.join(savepath, os.path.join(d, filename)+'.xlsx'))[filename]))
         data = pd.Series(np.concatenate(data).ravel())
         return data
 
@@ -577,7 +577,7 @@ class LeaveOutTwinCV(BaseSplitter):
                 (numpy array), array of train and test indices
     """
 
-    def __init__(self, threshold, cv, allow_twins_in_train=True, **kwargs):
+    def __init__(self, threshold, cv=None, allow_twins_in_train=True, **kwargs):
         self.threshold = int(threshold)
         if cv is None:
             self.cv = ms.RepeatedKFold()

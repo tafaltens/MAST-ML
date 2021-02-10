@@ -1,5 +1,5 @@
 from mastml.models import SklearnModel
-from mastml.data_splitters import NoSplit, SklearnDataSplitter, LeaveCloseCompositionsOut, LeaveOutPercent, \
+from mastml.data_splitters import LeaveOutTwinCV, NoSplit, SklearnDataSplitter, LeaveCloseCompositionsOut, LeaveOutPercent, \
     Bootstrap, JustEachGroup
 import unittest
 import pandas as pd
@@ -86,7 +86,18 @@ class TestSplitters(unittest.TestCase):
             shutil.rmtree(d)
         return
 
-    def test_leaveoutrwincv(self):
+    def test_leaveoutwincv(self):
+        # implemented = False
+        # self.assertTrue(implemented)
+
+        X = pd.DataFrame(np.random.uniform(low=0.0, high=100, size=(25, 10)))
+        y = pd.Series(np.random.uniform(low=0.0, high=100, size=(25,)))
+        splitter = LeaveOutTwinCV(1)
+        model = SklearnModel(model='LinearRegression')
+        splitter.evaluate(X=X, y=y, models=[model], groups=None)
+        for d in splitter.splitdirs:
+            self.assertTrue(os.path.exists(d))
+            shutil.rmtree(d)
         return
 
 
